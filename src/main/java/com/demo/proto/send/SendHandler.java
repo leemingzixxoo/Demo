@@ -7,14 +7,11 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 
 public class SendHandler extends ChannelInboundHandlerAdapter {
 	
-	private ChannelHandlerContext ctx;
-	
 	private volatile boolean stop = false;
 
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
-		this.ctx = ctx;
-		new Thread(new SendMsg()).start();
+		new Thread(new SendMsg(ctx)).start();
 	}
 
 	@Override
@@ -33,6 +30,12 @@ public class SendHandler extends ChannelInboundHandlerAdapter {
 	}
 	
 	final class SendMsg implements Runnable {
+		
+		private ChannelHandlerContext ctx;
+		
+		public SendMsg(ChannelHandlerContext ctx) {
+			this.ctx = ctx;
+		}
 		
 		public void run() {
 			PersonProto.Person.Builder personBuilder = PersonProto.Person.newBuilder();
