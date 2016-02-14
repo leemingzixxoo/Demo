@@ -1,1 +1,0 @@
-thrift --gen java Demo.thrift
