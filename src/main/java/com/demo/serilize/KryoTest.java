@@ -64,7 +64,7 @@ public class KryoTest {
             input = new Input(new FileInputStream("file.bin"));  
             Simple simple =null;  
             while((simple=kryo.readObject(input, Simple.class)) != null){  
-                System.out.println(simple.getAge() + "  " + simple.getName() + "  " + simple.getMap().toString());  
+                //System.out.println(simple.getAge() + "  " + simple.getName() + "  " + simple.getMap().toString());  
             }  
   
             input.close();  
