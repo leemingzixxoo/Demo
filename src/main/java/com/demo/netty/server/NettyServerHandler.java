@@ -1,5 +1,7 @@
 package com.demo.netty.server;
 
+import org.apache.commons.codec.binary.Hex;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -18,13 +20,9 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
 		ByteBuf bf = (ByteBuf) msg;
 		byte[] b = new byte[bf.readableBytes()];
 		bf.readBytes(b);
-		String resultStr = new String(b);  
-        System.out.println("Client said:" + resultStr);    
-		
+        System.out.println(Hex.encodeHex(b));
         bf.release();
-        
-		System.out.println("channelRead");
-	}
+    }
 
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {

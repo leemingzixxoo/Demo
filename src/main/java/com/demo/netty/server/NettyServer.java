@@ -2,6 +2,8 @@ package com.demo.netty.server;
 
 
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -10,15 +12,13 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.serialization.ClassResolvers;
-import io.netty.handler.codec.serialization.ObjectDecoder;
-import io.netty.handler.codec.serialization.ObjectEncoder;
+import io.netty.handler.codec.DelimiterBasedFrameDecoder;
 
 public class NettyServer {
 
 	public static void main(String[] args) {
 
-		EventLoopGroup bossGroup = new NioEventLoopGroup();  
+		EventLoopGroup bossGroup = new NioEventLoopGroup();
 		EventLoopGroup workerGroup = new NioEventLoopGroup();
 		
 		try {
@@ -32,13 +32,25 @@ public class NettyServer {
 				@Override
 				protected void initChannel(SocketChannel sc) throws Exception {
 					ChannelPipeline pipeline = sc.pipeline();
-					pipeline.addLast(new ObjectEncoder());
-					pipeline.addLast(new ObjectDecoder(ClassResolvers.cacheDisabled(null))); 
+					//pipeline.addLast(new ByteArrayDecoder());
+					//pipeline.addLast(new ByteArrayEncoder());
+					
+					//pipeline.addLast(new StringDecoder());
+					//pipeline.addLast(new StringEncoder());
+					
+					byte[] temp = new byte[2];
+					temp[0]=0x0D;
+					temp[1]=0x0A;
+					
+					ByteBuf bf = Unpooled.wrappedBuffer(temp);
+			        
+					pipeline.addLast(new DelimiterBasedFrameDecoder(1024, false, bf));
+					
 					pipeline.addLast(new NettyServerHandler());
 					
 				}});
 			
-			ChannelFuture cf = sb.bind(9999).sync();
+			ChannelFuture cf = sb.bind(8888).sync();
 			
 			cf.channel().closeFuture().sync();			
 		} catch(Exception e) {
