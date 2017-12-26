@@ -22,6 +22,8 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
 		bf.readBytes(b);
         System.out.println(Hex.encodeHex(b));
         bf.release();
+        
+        ctx.writeAndFlush("received");
     }
 
 	@Override

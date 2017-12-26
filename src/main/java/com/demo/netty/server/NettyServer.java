@@ -13,6 +13,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.DelimiterBasedFrameDecoder;
+import io.netty.handler.codec.string.StringEncoder;
 
 public class NettyServer {
 
@@ -45,6 +46,7 @@ public class NettyServer {
 					ByteBuf bf = Unpooled.wrappedBuffer(temp);
 			        
 					pipeline.addLast(new DelimiterBasedFrameDecoder(1024, false, bf));
+					pipeline.addLast(new StringEncoder());
 					
 					pipeline.addLast(new NettyServerHandler());
 					

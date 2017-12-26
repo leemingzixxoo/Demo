@@ -1,15 +1,22 @@
 package com.demo.netty.client;
 
+import java.util.Random;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
+/**
+ * Netty TCP 粘包处理
+ * @author Ming.Li
+ *
+ */
 public class NettyClientHandler extends ChannelInboundHandlerAdapter {
 
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        
-        byte[] temp = new byte[43];
+
+		byte[] temp = new byte[43];
 		temp[0]=0x23;
 		temp[1]=0x42;
 		temp[2]=0x0B;
@@ -51,61 +58,27 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
 		temp[38]=0x00;
 		temp[39]=0x0D;
 		temp[40]=0x0A;
-		temp[41]=0x23;
-		temp[42]=0x42;
 		
-        ByteBuf encoded = ctx.alloc().buffer(43);  
-        encoded.writeBytes(temp);  
-        ctx.writeAndFlush(encoded);
-        
-        byte[] temp2 = new byte[43];
-		temp2[0]=0x0B;
-		temp2[1]=0x00;
-		temp2[2]=0x01;
-		temp2[3]=0x00;
-		temp2[4]=0x00;
-		temp2[5]=(byte) 0x80;
-		temp2[6]=0x02;
-		temp2[7]=(byte)0xBB;
-		temp2[8]=0x00;
-		temp2[9]=0x00;
-		temp2[10]=0x01;
-		temp2[11]=0x67;
-		temp2[12]=(byte)0x96;
-		temp2[13]=(byte)0xF1;
-		temp2[14]=0x00;
-		temp2[15]=0x28;
-		temp2[16]=0x11;
-		temp2[17]=0x11;
-		temp2[18]=0x11;
-		temp2[19]=0x22;
-		temp2[20]=0x22;
-		temp2[21]=0x22;
-		temp2[22]=0x33;
-		temp2[23]=0x33;
-		temp2[24]=0x44;
-		temp2[25]=0x44;
-		temp2[26]=0x00;
-		temp2[27]=0x00;
-		temp2[28]=0x00;
-		temp2[29]=0x00;
-		temp2[30]=0x00;
-		temp2[31]=0x00;
-		temp2[32]=0x00;
-		temp2[33]=0x00;
-		temp2[34]=0x00;
-		temp2[35]=0x00;
-		temp2[36]=0x00;
-		temp2[37]=0x0D;
-		temp2[38]=0x0A;
-		temp2[39]=0x0B;
-		temp2[40]=0x00;
-		temp2[41]=0x01;
-		temp2[42]=0x00;
-		
-		ByteBuf encoded2 = ctx.alloc().buffer(43);  
-        encoded2.writeBytes(temp2);  
-        ctx.writeAndFlush(encoded2);
+		int arrayIndex = 0;
+		while(true) {
+						
+			int len = new Random().nextInt(5) + 1;
+			byte[] send = new byte[len];
+			
+			for(int i=0; i<len; i++) {
+				if(arrayIndex > 40) {
+					arrayIndex = 0;
+				}
+				
+				send[i] = temp[arrayIndex++];				
+			}
+			
+			ByteBuf encoded = ctx.alloc().buffer(len);  
+            encoded.writeBytes(send);  
+            ctx.writeAndFlush(encoded);
+            
+            Thread.sleep(new Random().nextInt(100));
+		}
 	}
 
 	@Override
