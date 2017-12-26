@@ -11,6 +11,8 @@ public class NetMonitorLog {
 	private String guid;
 
 	private long timestamp;
+	
+	private long time;
 
 	private String dateStr;
 
@@ -81,6 +83,14 @@ public class NetMonitorLog {
 
 	public void setTimestamp(long timestamp) {
 		this.timestamp = timestamp;
+	}
+
+	public long getTime() {
+		return time;
+	}
+
+	public void setTime(long time) {
+		this.time = time;
 	}
 
 	public String getDateStr() {

@@ -23,6 +23,7 @@ public class NMLogGenerator {
 		for(int i=0; i<1000000; i++){
 			NetMonitorLog n = new NetMonitorLog();
 			n.setTimestamp(System.currentTimeMillis());
+			n.setTime(System.currentTimeMillis()/1000/60*1000*60);
 			n.setProtocalType(protocal[r.nextInt(2)]);
 			n.setSrcIP("192.168.1."+r.nextInt(244));
 			n.setDstIP("192.168.10."+r.nextInt(244));
